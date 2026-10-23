@@ -16,6 +16,16 @@ def main():
             add_todos(sys.argv[2])
     elif sys.argv[1] == "list" :
         list_todos()
+    elif sys.argv[1] == "done" :
+        if len(sys.argv) < 3:
+            print("请提供待办编号")
+            return
+        mark_done(sys.argv[2])
+    elif sys.argv[1] == "delete" :
+        if len(sys.argv) < 3:
+            print("请提供待办编号")
+            return
+        delete_todo(sys.argv[2])
     else:
         print("未知命令，指令为python todo.py add ”买牛奶“ ")
         return
@@ -52,6 +62,40 @@ def save_todos(todos):
     os.makedirs("data", exist_ok=True)  # 创建文件目录
     with open("data/todos.json", "w",encoding="utf-8") as f:
         json.dump(todos, f, ensure_ascii=False, indent=2)
+
+def mark_done(todo_id):
+    """把指定 id 的待办标记为完成。"""
+    if not todo_id.isdigit():
+        print(f"编号必须是数字，你输入的是：{todo_id}")
+        return
+    todos = load_todos()
+    todos_id= int(todo_id)
+    if todos_id not in [t["id"]for t in todos]:
+        print("没有此代办")
+        return
+    for t in todos:
+        if t["id"] == todos_id:
+            t["done"] = True
+
+    save_todos(todos)
+    print("成功标记")
+
+def delete_todo(todo_id):
+    """删除指定 id 的待办。"""
+    if not todo_id.isdigit():
+        print(f"编号必须是数字，你输入的是：{todo_id}")
+        return
+    todos = load_todos()
+    todos_id = int(todo_id)
+    new_todos=[]
+    for t in todos:
+        if t["id"] != todos_id:
+            new_todos.append(t)
+    if len(new_todos) != len(todos):
+        print(f"已删除id为{todo_id}的待办")
+        save_todos(new_todos)
+        return
+    print(f"未找到id {todo_id}")
 
 
 if __name__ == "__main__":
