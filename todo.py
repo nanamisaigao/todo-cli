@@ -53,11 +53,40 @@ Todo CLI —— 命令行待办事项管理器
 打印未知命令，然后贴出正确用法
 
 """
-
+import sys
+todos=[]
 def main():
     """程序入口：解析命令行参数，分发到 add / list / done / delete。"""
+    if len(sys.argv) < 2:
+        print("请提供待办内容，指令为python todo.py add ”买牛奶“")
+        return
+    elif sys.argv[1] == "add" :
+        if len(sys.argv) < 3:
+            print("请提供待办内容")
+            return
+        else:
+            add_todos(sys.argv[2])
+    elif sys.argv[1] == "list" :
+        list_todos()
+    else:
+        print("未知命令，指令为python todo.py add ”买牛奶“ ")
+        return
 
-    pass
+def add_todos(text):#添加一条待办
+    if todos:
+        new_id = max(t["id"] for t in todos) + 1
+    else:
+        new_id = 1
+    todos.append({"id":new_id,"text": text, "done": False})
+    print(f"已添加 [{new_id}] {text}")
+
+def list_todos():#列出所有待办
+    for t in todos:
+        if t["done"]:
+            mark="[x]"
+        else:
+            mark="[ ]"
+        print(f"{mark} {t['id']}. {t['text']}")
 
 if __name__ == "__main__":
     main()
