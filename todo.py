@@ -3,6 +3,9 @@ import sys
 import os
 import json
 
+DATA_DIR="data"
+DATA_FILE=os.path.join(DATA_DIR,"todos.json")
+
 def main():
     """程序入口：解析命令行参数，分发到 add / list / done / delete。"""
     if len(sys.argv) < 2:
@@ -13,7 +16,7 @@ def main():
             print("请提供待办内容")
             return
         else:
-            add_todos(sys.argv[2])
+            add_todo(sys.argv[2])
     elif sys.argv[1] == "list" :
         list_todos()
     elif sys.argv[1] == "done" :
@@ -30,7 +33,7 @@ def main():
         print("未知命令，指令为python todo.py add ”买牛奶“ ")
         return
 
-def add_todos(text):#添加一条待办
+def add_todo(text):#添加一条待办
     todos=load_todos()
     if todos:
         new_id = max(t["id"] for t in todos) + 1
@@ -51,10 +54,10 @@ def list_todos():#列出所有待办
 
 def load_todos():
     """读取 data/todos.json，返回待办列表；文件不存在时返回空列表。"""
-    if not os.path.exists("data/todos.json"):
+    if not os.path.exists(DATA_FILE):
         return []
     try:
-        with open("data/todos.json", "r",encoding="utf-8") as f:
+        with open(DATA_FILE, "r",encoding="utf-8") as f:
             data=json.load(f)
     except json.JSONDecodeError:
         print("文件损坏")
@@ -66,37 +69,36 @@ def load_todos():
 
 def save_todos(todos):
     """把待办列表写回 data/todos.json，目录不存在则创建。"""
-    os.makedirs("data", exist_ok=True)  # 创建文件目录
-    with open("data/todos.json", "w",encoding="utf-8") as f:
+    os.makedirs(DATA_DIR, exist_ok=True)  # 创建文件目录
+    with open(DATA_FILE, "w",encoding="utf-8") as f:
         json.dump(todos, f, ensure_ascii=False, indent=2)
 
-def mark_done(todo_id):
+def mark_done(todo_id_str):
     """把指定 id 的待办标记为完成。"""
-    if not todo_id.isdigit():
-        print(f"编号必须是数字，你输入的是：{todo_id}")
+    if not todo_id_str.isdigit():
+        print(f"编号必须是数字，你输入的是：{todo_id_str}")
         return
     todos = load_todos()
-    todos_id= int(todo_id)
-    if todos_id not in [t["id"]for t in todos]:
+    todo_id= int(todo_id_str)
+    if todo_id not in [t["id"]for t in todos]:
         print("没有此代办")
         return
     for t in todos:
-        if t["id"] == todos_id:
+        if t["id"] == todo_id:
             t["done"] = True
-
     save_todos(todos)
     print("成功标记")
 
-def delete_todo(todo_id):
+def delete_todo(todo_id_str):
     """删除指定 id 的待办。"""
-    if not todo_id.isdigit():
-        print(f"编号必须是数字，你输入的是：{todo_id}")
+    if not todo_id_str.isdigit():
+        print(f"编号必须是数字，你输入的是：{todo_id_str}")
         return
     todos = load_todos()
-    todos_id = int(todo_id)
+    todo_id = int(todo_id_str)
     new_todos=[]
     for t in todos:
-        if t["id"] != todos_id:
+        if t["id"] != todo_id:
             new_todos.append(t)
     if len(new_todos) != len(todos):
         print(f"已删除id为{todo_id}的待办")
