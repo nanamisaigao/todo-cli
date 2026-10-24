@@ -53,9 +53,16 @@ def load_todos():
     """读取 data/todos.json，返回待办列表；文件不存在时返回空列表。"""
     if not os.path.exists("data/todos.json"):
         return []
-    else:
+    try:
         with open("data/todos.json", "r",encoding="utf-8") as f:
-            return json.load(f)
+            data=json.load(f)
+    except json.JSONDecodeError:
+        print("文件损坏")
+        return []
+    if not isinstance(data, list):
+        print("文件顶层不是列表")
+        return []
+    return data
 
 def save_todos(todos):
     """把待办列表写回 data/todos.json，目录不存在则创建。"""
