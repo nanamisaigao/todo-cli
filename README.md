@@ -8,18 +8,30 @@
 - `list`：列出所有待办
 - `done`：把某条标记为完成
 - `delete`：删除某条待办
-- 
+
+## 项目结构
+
+todo.py # 主程序：命令行入口 + 核心功能
+test_todo.py # 单元测试
+README.md 
+.gitignore
+data/todos.json #核心数据储存处
+todos.json # 测试运行时生成，不纳入版本控制，测试数据
+
 ## 运行方式
 
-```bash
 python todo.py add "买牛奶"      # 添加待办
 python todo.py list              # 列出所有待办
 python todo.py done 1            # 标记编号 1 为完成
 python todo.py delete 1          # 删除编号 1
 
-## 数据存储
+## 运行测试
 
-```markdown
+测试覆盖：
+添加（空列表 / 已有数据）、标记完成（存在 / 不存在）、删除（存在 / 不存在）。测试使用独立的 test_todos.json，不会影响 data/todos.json 中的真实数据。
+
+
+## 数据存储
 
 数据保存在 `data/todos.json`，格式为 JSON 列表，每条待办包含三个字段：
 
@@ -32,8 +44,3 @@ python todo.py delete 1          # 删除编号 1
 ## 环境要求
 
 Python 3.13+，仅用标准库。
-
-## 当前状态
-
-已完成：`add` / `list` / `done` / `delete`，数据持久化。
-待完成：异常处理、测试、代码重构。
