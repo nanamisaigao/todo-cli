@@ -11,19 +11,25 @@
 
 ## 项目结构
 
-todo.py # 主程序：命令行入口 + 核心功能
-test_todo.py # 单元测试
-README.md 
-.gitignore
-data/todos.json #核心数据储存处
-todos.json # 测试运行时生成，不纳入版本控制，测试数据
+```bash
+todo_cli/
+├── todo.py           # 主程序：命令行入口 + 核心功能
+├── test_todo.py      # 单元测试
+├── README.md         # 项目说明
+├── .gitignore        # Git 忽略规则
+├── data/
+│   └── todos.json    # 核心数据存储，不纳入版本控制
+└── test_todos.json   # 测试运行时生成，不纳入版本控制
+```
 
 ## 运行方式
 
+```bash
 python todo.py add "买牛奶"      # 添加待办
 python todo.py list              # 列出所有待办
 python todo.py done 1            # 标记编号 1 为完成
 python todo.py delete 1          # 删除编号 1
+```
 
 ## 运行测试
 
